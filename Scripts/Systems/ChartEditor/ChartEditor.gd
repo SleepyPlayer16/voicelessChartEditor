@@ -77,7 +77,7 @@ func _process(_delta):
 		real_songPos = songPosition
 	songPositionLabel.text = "Song Position: " + str(float(str( real_songPos ).pad_decimals(3)))
 	update_line_position()
-
+	mouseHeldDown()
 	selector.position.x = floor((get_global_mouse_position().x) / snapValues[currentSnapValue]) * snapValues[currentSnapValue]
 	songPos = ((selector.position.x / 64) * bps)
 
@@ -93,15 +93,6 @@ func update_line_position():
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouseEvent = event as InputEventMouseButton
-		if mouseEvent.button_index == MOUSE_BUTTON_LEFT and mouseEvent.pressed and !mouseOnButton:
-			var noteIndex = notes.find(str(songPos).pad_decimals(3))
-
-			if noteIndex >= 0 or selector.position.x < 0:
-				pass
-			else:
-				spawnNote()
-				notes.append(songPos)
-				notes.sort()
 
 		if mouseEvent.button_index == MOUSE_BUTTON_WHEEL_UP  and mouseEvent.pressed:
 				if (currentSnapValue < snapValues.size()-1):
@@ -112,15 +103,16 @@ func _input(event: InputEvent) -> void:
 					currentSnapValue -= 1
 				snapValueLabel.text = "Snap: " + str(snapValues[currentSnapValue])
 				
-func compare_numbers(a: String, b: String) -> int:
-	var num_a = float(a)
-	var num_b = float(b)
-	if num_a > num_b:
-		return -1
-	elif num_a < num_b:
-		return 1
-	else:
-		return 0
+func mouseHeldDown():
+	if Input.is_action_pressed("placeNote") and !mouseOnButton:
+		var noteIndex = notes.find(songPos)
+
+		if noteIndex >= 0 or selector.position.x < 0:
+			pass
+		else:
+			spawnNote()
+			notes.append(songPos)
+			notes.sort()
 
 
 func spawnNote():

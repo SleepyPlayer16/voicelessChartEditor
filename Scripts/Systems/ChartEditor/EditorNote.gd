@@ -9,13 +9,11 @@ var timeStamp: float = 0.0
 func _ready():
 	set_process_input(true)
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouseEvent = event as InputEventMouseButton
-		if mouseEvent.button_index == MOUSE_BUTTON_RIGHT and mouseEvent.pressed:
-			if mouseIn:
-				get_parent().deleteNote(timeStamp)
-				queue_free()
+func _process(delta):
+	if Input.is_action_pressed("DeleteNote"):
+		if mouseIn:
+			get_parent().deleteNote(timeStamp)
+			queue_free()
 
 func _on_note_ar_mouse_entered():
 	mouseIn = true
