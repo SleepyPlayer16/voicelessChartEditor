@@ -2,6 +2,8 @@ extends Node2D
 
 @export var bpm = 60
 @export var songToPlay = ""
+@export var chartToLoad = ""
+
 var bps = 60/float(bpm)
 var songPos = 0.0
 var real_songPos = 0.0
@@ -17,6 +19,11 @@ var snapValues = [4, 8, 12, 16, 20, 24, 32, 48, 64, 96, 128, 192]
 var currentSnapValue = 8
 var mouseOnButton = false
 var detectedSongs = []
+var noteDict = {
+	"notes":{
+		
+	}
+}
 
 @onready var selector = $ColorRect
 @onready var line = $Line
@@ -119,11 +126,11 @@ func compare_numbers(a: String, b: String) -> int:
 func spawnNote():
 	var sceneInstance = note.instantiate()
 	add_child(sceneInstance)
-	sceneInstance.timeStamp = str(songPos).pad_decimals(3)
+	sceneInstance.timeStamp = songPos
 	sceneInstance.position = selector.position
 
 func deleteNote(noteTimeStamp):
-	var noteIndex = notes.find(str(noteTimeStamp).pad_decimals(3))
+	var noteIndex = notes.find(noteTimeStamp)
 	notes.remove_at(noteIndex)
 	notes.sort()
 
@@ -144,17 +151,23 @@ func _on_button_2_pressed():
 	exportChart()
 
 func exportChart():
+	for n in notes.size():
+		noteDict["notes"][n] = notes[n] 
 	if OS.has_feature("standalone"):
 		var folder := OS.get_executable_path().get_base_dir()
-		var file = FileAccess.open(folder + "/chart.txt",FileAccess.WRITE)
+		var file = FileAccess.open(folder + "/chart.json",FileAccess.WRITE)
 		for i in range(notes.size()):
 			file.store_line(String(notes[i]) + "\r")
 	else:
 		var time = Time.get_time_dict_from_system()
 
-		var file = FileAccess.open("user://chart.txt",FileAccess.WRITE)
-		for i in range(notes.size()):
-			file.store_line(str(notes[i]) + "\r")
+		var file = FileAccess.open("user://chart.json",FileAccess.WRITE)
+		for i in range(notes.size()+1):
+			var file_access = FileAccess
+			var json = JSON.stringify(noteDict)
+			if file != null:
+				file.store_string(json)
+				file.close()			
 		OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"), true)
 
 #func get_filelist(path):
