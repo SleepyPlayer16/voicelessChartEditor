@@ -93,9 +93,9 @@ func _input(event: InputEvent) -> void:
 				pass
 			else:
 				spawnNote()
-				notes.append(str(songPos).pad_decimals(3))
+				notes.append(songPos)
 				notes.sort()
-				print(notes)
+
 		if mouseEvent.button_index == MOUSE_BUTTON_WHEEL_UP  and mouseEvent.pressed:
 				if (currentSnapValue < snapValues.size()-1):
 					currentSnapValue += 1
@@ -104,7 +104,16 @@ func _input(event: InputEvent) -> void:
 				if (currentSnapValue > 0):
 					currentSnapValue -= 1
 				snapValueLabel.text = "Snap: " + str(snapValues[currentSnapValue])
-
+				
+func compare_numbers(a: String, b: String) -> int:
+	var num_a = float(a)
+	var num_b = float(b)
+	if num_a > num_b:
+		return -1
+	elif num_a < num_b:
+		return 1
+	else:
+		return 0
 
 
 func spawnNote():
