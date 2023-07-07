@@ -148,49 +148,32 @@ func _on_button_2_mouse_exited():
 	mouseOnButton = false
 
 func _on_button_2_pressed():
-	exportChart()
+	exportAsTXT()
+
+func _on_button_3_mouse_entered():
+	mouseOnButton = true
+
+
+func _on_button_3_mouse_exited():
+	mouseOnButton = false
 
 func exportChart():
 	for n in notes.size():
 		noteDict["notes"][n] = notes[n] 
-	if OS.has_feature("standalone"):
-		var folder := OS.get_executable_path().get_base_dir()
-		var file = FileAccess.open(folder + "/chart.json",FileAccess.WRITE)
-		for i in range(notes.size()):
-			file.store_line(String(notes[i]) + "\r")
-	else:
-		var time = Time.get_time_dict_from_system()
+	var file = FileAccess.open("user://chart.json",FileAccess.WRITE)
+	for i in range(notes.size()):
+		var file_access = FileAccess
+		var json = JSON.stringify(noteDict)
+		if file != null:
+			file.store_string(json)
+			file.close()
+	OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"), true)
 
-		var file = FileAccess.open("user://chart.json",FileAccess.WRITE)
-		for i in range(notes.size()+1):
-			var file_access = FileAccess
-			var json = JSON.stringify(noteDict)
-			if file != null:
-				file.store_string(json)
-				file.close()			
-		OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"), true)
+func exportAsTXT():
+	var file = FileAccess.open("user://chart.txt",FileAccess.WRITE)
+	for i in range(notes.size()):
+		file.store_line(str(notes[i]) + "\r")
+	OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"), true)
 
-#func get_filelist(path):
-#	var dir = DirAccess.open(path)
-#	dir.make_dir("songs")
-#	DirAccess.make_dir_absolute("user://levels/song")
-#	dir = DirAccess.open(path+"/songs")
-#	if dir:
-#		dir.list_dir_begin()
-#		var file_name = dir.get_next()
-#		while file_name != "":
-#			if dir.current_is_dir():
-#				print("Found directory: " + file_name)
-#			else:
-#				if String(file_name).get_extension() == "ogg" or String(file_name).get_extension() == "mp3" or String(file_name).get_extension() == "wav":
-#					print("Found file: " + file_name)
-#					var songFile = FileAccess.open("user://songs/" + file_name, FileAccess.READ)
-#					var audio_loader = AudioLoader.new()
-#
-#					detectedSongs.append(audio_loader.loadfile("user://songs/" + file_name))
-#					songFile.close()
-#			file_name = dir.get_next()
-#			print(detectedSongs)
-#	else:
-#		print("An error occurred when trying to access the path.")
-#
+func _on_button_3_pressed():
+	exportChart()
