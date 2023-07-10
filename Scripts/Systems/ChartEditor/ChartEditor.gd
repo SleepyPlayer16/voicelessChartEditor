@@ -134,7 +134,6 @@ func mouseHeldDown():
 			notes.sort()
 			var actualIndex = notes.find(songPos)
 			spawnNote(null, null, actualIndex)
-			print(actualIndex)
 
 func spawnNote(loadNotes, tStamp, id):
 	var sceneInstance = note.instantiate()
@@ -197,7 +196,6 @@ func _on_button_3_pressed():
 
 func _on_line_col_area_entered(_area):
 	cur_note = _area.get_parent().note_id
-	print(cur_note)
 	_area.get_parent().coolEffect()
 	lineAnimPlayer.play("noteHit")
 	if !testing:

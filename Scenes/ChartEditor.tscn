@@ -142,6 +142,7 @@ _data = {
 script = ExtResource("1_uq4dp")
 bpm = 125
 songToPlay = "res://Music/1.ogg"
+chartToLoad = "res:// SOLAR_CITY.json"
 
 [node name="BackTiled" type="Sprite2D" parent="."]
 visible = false
