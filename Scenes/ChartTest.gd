@@ -62,7 +62,6 @@ func _process(_delta: float):
 				loadParentChart = false
 
 		if noteloop.size() > 2:
-			print(cur_note)
 			if !visible:
 				noteloop = get_parent().notes
 				visible = true
