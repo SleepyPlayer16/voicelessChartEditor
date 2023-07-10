@@ -1,12 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://c3n5488aobjcn"]
+[gd_scene load_steps=12 format=3 uid="uid://c3n5488aobjcn"]
 
 [ext_resource type="Script" path="res://Scripts/Systems/ChartEditor/ChartEditor.gd" id="1_uq4dp"]
 [ext_resource type="Texture2D" uid="uid://bptd1tu7j36ao" path="res://Sprites/Editor/BackTiled.png" id="2_tqosw"]
 [ext_resource type="Texture2D" uid="uid://86t01vadfh2s" path="res://Sprites/Editor/Note.png" id="3_8wvea"]
 [ext_resource type="AudioStream" uid="uid://snurhh47n38x" path="res://Sounds/Metronome.wav" id="3_ipud4"]
 [ext_resource type="StyleBox" uid="uid://ccigkfl8qvk5j" path="res://Styles/ChartEditorBtnStyle.tres" id="5_1fhpq"]
-[ext_resource type="Script" path="res://Scenes/ChartTest.gd" id="6_kjmde"]
-[ext_resource type="Texture2D" uid="uid://bnfe0jfr11r7r" path="res://Sprites/Editor/spr_receptor.png" id="7_skrk6"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ujueu"]
 blend_mode = 1
@@ -50,44 +48,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o0nk1"]
-size = Vector2(24, 552)
-
-[sub_resource type="Animation" id="Animation_fb3kv"]
-resource_name = "noteHit"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(0.812252, 1),
-"update": 0,
-"values": [Color(0, 0.764706, 0.827451, 1), Color(1, 0.882353, 0, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_outpr"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 0.882353, 0, 1)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ubu2a"]
-_data = {
-"RESET": SubResource("Animation_outpr"),
-"noteHit": SubResource("Animation_fb3kv")
-}
+size = Vector2(20, 552)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3e2a"]
 bg_color = Color(0.627451, 0.631373, 1, 1)
@@ -102,46 +63,11 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 corner_detail = 3
 
-[sub_resource type="Animation" id="Animation_v1ce1"]
-resource_name = "HitNote"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("SprReceptor:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.406966, 0.5, 0.6, 0.7, 0.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
-}
-
-[sub_resource type="Animation" id="Animation_he8lh"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("SprReceptor:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [8]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nrip3"]
-_data = {
-"HitNote": SubResource("Animation_v1ce1"),
-"RESET": SubResource("Animation_he8lh")
-}
-
 [node name="ChartEditor" type="Node2D"]
 script = ExtResource("1_uq4dp")
-bpm = 125
+bpm = 180
 songToPlay = "res://Music/1.ogg"
+chartToLoad = "res://chart.json"
 
 [node name="BackTiled" type="Sprite2D" parent="."]
 visible = false
@@ -178,7 +104,6 @@ stream = ExtResource("3_ipud4")
 
 [node name="Line" type="ColorRect" parent="."]
 visibility_layer = 2
-z_index = 50
 offset_left = 37.0
 offset_top = 1.0
 offset_right = 39.0
@@ -191,13 +116,8 @@ position = Vector2(444, 270)
 [node name="LineCol" type="Area2D" parent="Line"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Line/LineCol"]
-position = Vector2(-8, 266)
+position = Vector2(-10, 266)
 shape = SubResource("RectangleShape2D_o0nk1")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Line"]
-libraries = {
-"": SubResource("AnimationLibrary_ubu2a")
-}
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -101
@@ -264,45 +184,6 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_t3e2a")
 theme_override_styles/hover = ExtResource("5_1fhpq")
 text = "Export as JSON"
 
-[node name="Button5" type="Button" parent="CanvasLayer"]
-offset_left = 586.0
-offset_top = 390.0
-offset_right = 762.0
-offset_bottom = 451.0
-focus_mode = 0
-theme_override_colors/font_outline_color = Color(0.290196, 0, 0.156863, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_t3e2a")
-theme_override_styles/hover = ExtResource("5_1fhpq")
-text = "Test chart"
-
-[node name="Button6" type="Button" parent="CanvasLayer"]
-offset_left = 459.0
-offset_top = 390.0
-offset_right = 555.0
-offset_bottom = 451.0
-focus_mode = 0
-theme_override_colors/font_outline_color = Color(0.290196, 0, 0.156863, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_t3e2a")
-theme_override_styles/hover = ExtResource("5_1fhpq")
-text = "Zoom +"
-
-[node name="Button7" type="Button" parent="CanvasLayer"]
-offset_left = 354.0
-offset_top = 390.0
-offset_right = 450.0
-offset_bottom = 451.0
-focus_mode = 0
-theme_override_colors/font_outline_color = Color(0.290196, 0, 0.156863, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_t3e2a")
-theme_override_styles/hover = ExtResource("5_1fhpq")
-text = "Zoom -"
-
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer"]
 offset_left = 592.0
 offset_right = 1019.0
@@ -335,63 +216,6 @@ offset_bottom = 160.0
 theme_override_font_sizes/normal_font_size = 32
 text = "SongPosition:"
 
-[node name="TextEdit" type="TextEdit" parent="CanvasLayer"]
-offset_left = 354.0
-offset_top = 470.0
-offset_right = 762.0
-offset_bottom = 518.0
-focus_mode = 1
-theme_override_colors/background_color = Color(0, 0.576471, 0.858824, 1)
-theme_override_colors/font_placeholder_color = Color(0.596078, 0.596078, 0.596078, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/selection_color = Color(0, 1, 1, 1)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = ExtResource("5_1fhpq")
-theme_override_styles/focus = ExtResource("5_1fhpq")
-placeholder_text = "Type a name for the chart here..."
-highlight_all_occurrences = true
-
-[node name="TestChartLayer" type="CanvasLayer" parent="."]
-visible = false
-offset = Vector2(0, 464)
-transform = Transform2D(1, 0, 0, 1, 0, 464)
-script = ExtResource("6_kjmde")
-
-[node name="ColorRect2" type="ColorRect" parent="TestChartLayer"]
-offset_left = -24.0
-offset_top = -496.0
-offset_right = 992.0
-offset_bottom = 112.0
-color = Color(0, 0, 0, 0.6)
-
-[node name="SprReceptor" type="Sprite2D" parent="TestChartLayer"]
-z_index = 102
-position = Vector2(480, 0)
-scale = Vector2(2, 2)
-texture = ExtResource("7_skrk6")
-hframes = 9
-frame = 8
-
-[node name="Button4" type="Button" parent="TestChartLayer"]
-offset_left = 392.0
-offset_top = -206.0
-offset_right = 568.0
-offset_bottom = -145.0
-focus_mode = 0
-theme_override_colors/font_outline_color = Color(0.290196, 0, 0.156863, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_t3e2a")
-theme_override_styles/hover = ExtResource("5_1fhpq")
-text = "Go back"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TestChartLayer"]
-speed_scale = 2.0
-libraries = {
-"": SubResource("AnimationLibrary_nrip3")
-}
-
 [connection signal="area_entered" from="Line/LineCol" to="." method="_on_line_col_area_entered"]
 [connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/Button2" to="." method="_on_button_2_mouse_entered"]
@@ -400,17 +224,3 @@ libraries = {
 [connection signal="mouse_entered" from="CanvasLayer/Button3" to="." method="_on_button_3_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/Button3" to="." method="_on_button_3_mouse_exited"]
 [connection signal="pressed" from="CanvasLayer/Button3" to="." method="_on_button_3_pressed"]
-[connection signal="mouse_entered" from="CanvasLayer/Button5" to="." method="_on_button_3_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/Button5" to="." method="_on_button_3_mouse_exited"]
-[connection signal="pressed" from="CanvasLayer/Button5" to="." method="_on_button_5_pressed"]
-[connection signal="mouse_entered" from="CanvasLayer/Button6" to="." method="_on_button_3_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/Button6" to="." method="_on_button_3_mouse_exited"]
-[connection signal="pressed" from="CanvasLayer/Button6" to="." method="_on_button_6_pressed"]
-[connection signal="mouse_entered" from="CanvasLayer/Button7" to="." method="_on_button_3_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/Button7" to="." method="_on_button_3_mouse_exited"]
-[connection signal="pressed" from="CanvasLayer/Button7" to="." method="_on_button_7_pressed"]
-[connection signal="mouse_entered" from="CanvasLayer/TextEdit" to="." method="_on_text_edit_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/TextEdit" to="." method="_on_text_edit_mouse_exited"]
-[connection signal="mouse_entered" from="TestChartLayer/Button4" to="." method="_on_button_3_mouse_entered"]
-[connection signal="mouse_exited" from="TestChartLayer/Button4" to="." method="_on_button_3_mouse_exited"]
-[connection signal="pressed" from="TestChartLayer/Button4" to="." method="_on_button_4_pressed"]
